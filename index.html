@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Empréstimo</title>
+    <style>
+        /* Resetando estilos */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2b7a3d, #76b947);
+            color: #fff;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 400%;
+            height: 400%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent 70%);
+            animation: rotation 6s infinite linear;
+            z-index: -1;
+        }
+
+        @keyframes rotation {
+            from {
+                transform: rotate(0);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: auto;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+            border-radius: 25px;
+        }
+
+        .logo img:hover {
+            opacity: 1;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        label {
+            display: block;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            font-size: 1em;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.2);
+        }
+
+        input:focus,
+        select:focus {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Estilizando os selects com opções em quadrados */
+        .options-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .options-container select {
+            width: 30%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: #fff;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        button {
+            background: linear-gradient(45deg, #45c477, #348f50);
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background 0.3s ease-in-out;
+            box-shadow: 0 0 10px rgba(45, 180, 85, 0.3);
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #2abf6b, #2d8f50);
+            box-shadow: 0 0 15px rgba(45, 180, 85, 0.5);
+        }
+
+        #thankYou {
+            display: none;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="logo">
+            <img src="logo.png" alt="Logo">
+        </div>
+
+        <h2>Solicitação de Empréstimo</h2>
+
+        <!-- Etapa 1 -->
+        <form action="https://api.staticforms.xyz/submit" method="post">
+            <input type="hidden" name="accessKey" value="33718e1a-0672-4cbb-bf21-01102894938f"> <!-- Required -->
+
+            <div class="form-step active" id="step1">
+                <label for="nome">Nome Completo:</label>
+                <input type="text" id="nome" name="$Nome:" required>
+                <label for="cpf">CPF:</label>
+                <input type="text" id="cpf" name="$Cpf:" maxlength="11"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                <label for="telefone">Telefone:</label>
+                <input type="text" maxlength="15" name="$Telefone:" id="telefone" required>
+                <!-- Alterei o tipo de submit para button -->
+                <button type="button" onclick="nextStep(2)">Próximo</button>
+            </div>
+
+            <!-- Etapa 2 -->
+            <div class="form-step" id="step2">
+                <label for="valor">Valor do Empréstimo:</label>
+                <div class="options-container">
+                    <select style=" background-color: white; color: black;" id="valor" name="$Valor-Solicitado:"
+                        required>
+                        <option value="ate 5 mil reais">Até 5 mil reais</option>
+                        <option value="ate 10 mil reais">Até 10 mil reais</option>
+                        <option value="acima de 10 mil reais">Acima de 10 mil reais</option>
+                    </select>
+                </div>
+
+                <label for="prazo">Parcelas (meses):</label>
+                <div class="options-container">
+                    <select style="background-color: white; color: black;" id="prazo" name="$Parcelas" required>
+                        <option value="12">12x</option>
+                        <option value="24">24x</option>
+                        <option value="36">36x</option>
+                        <option value="64">64x</option>
+                    </select>
+                </div>
+
+                <input type="hidden" name="redirectTo" value="obrigado.html">
+                <input style="    background-color: forestgreen;
+                font-size: x-large;
+            " type="submit" value="Solicitar" />
+            </div>
+
+            <!-- Mensagem de Agradecimento -->
+            <div class="form-step" id="thankYou">
+                <h3>Obrigado pelo contato!</h3>
+                <p>Aguarde que um de nossos consultores entrará em contato em breve.</p>
+            </div>
+        </form>
+
+    </div>
+
+    <script>
+        function nextStep(step) {
+            const currentStep = document.querySelector(".form-step.active");
+            const inputs = currentStep.querySelectorAll("input, select");
+
+            let allFilled = true;
+            inputs.forEach(input => {
+                if (!input.value) {
+                    allFilled = false;
+                    input.style.borderColor = "red";
+                } else {
+                    input.style.borderColor = "";
+                }
+            });
+
+            // Validação do campo de telefone para garantir entre 11 e 15 caracteres
+            const telefone = document.getElementById('telefone').value;
+            if (telefone.length < 11 || telefone.length > 15) {
+                allFilled = false;
+                alert("O telefone deve ter entre 11 e 15 caracteres.");
+                document.getElementById('telefone').style.borderColor = "red";
+            }
+
+            if (currentStep.id === 'step1') {
+                const cpf = document.getElementById('cpf').value;
+                if (cpf.length !== 11) {
+                    allFilled = false;
+                    alert("O CPF deve ter exatamente 11 caracteres.");
+                }
+            }
+
+            if (allFilled) {
+                currentStep.classList.remove("active");
+                document.getElementById(`step${step}`).classList.add("active");
+            } else {
+                alert("Por favor, preencha todos os campos antes de continuar.");
+            }
+        }
+    </script>
+
+</body>
+
+</html>
